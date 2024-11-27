@@ -36,7 +36,6 @@ namespace PartySizeReunited
 
 			bool found = false;
 
-			// Parcourt les modèles existants
 			for (int index = 0; index < models.Count; index++)
 			{
 				if (models[index] is TBaseType)

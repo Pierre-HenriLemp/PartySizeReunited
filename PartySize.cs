@@ -9,8 +9,6 @@ namespace PartySizeReunited
 	{
 		public override ExplainedNumber GetPartyMemberSizeLimit(PartyBase party, bool includeDescriptions = false)
 		{
-			// Add parameters in order to add value for only player / Allies / All / etc.
-
 			Dropdown<string> bonusScope = MCMUISettings.Instance.BonusScope;
 			float bonusPartySize = MCMUISettings.Instance.PartyBonusAmnt;
 
@@ -19,7 +17,7 @@ namespace PartySizeReunited
 			switch (bonusScope.SelectedValue)
 			{
 				case "Everyone":
-					// Everyone party who have a leader hero
+					// Every party who have a leader hero
 					if (party.LeaderHero != null)
 					{
 						result.Add(bonusPartySize, null, null);
