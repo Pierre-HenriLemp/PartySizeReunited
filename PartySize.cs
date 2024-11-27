@@ -20,26 +20,25 @@ namespace PartySizeReunited
 			{
 				case "Everyone":
 					// Everyone party who have a leader hero
-					bool flag = party.LeaderHero != null;
-					if (flag)
+					if (party.LeaderHero != null)
 					{
 						result.Add(bonusPartySize, null, null);
 					}
 					break;
 				case "Only player":
-					if (party.LeaderHero.IsHumanPlayerCharacter)
+					if (party.LeaderHero != null && party.LeaderHero.IsHumanPlayerCharacter)
 					{
 						result.Add(bonusPartySize, null, null);
 					}
 					break;
 				case "Only player clan":
-					if (party.LeaderHero.IsHumanPlayerCharacter || party.LeaderHero.Clan == Hero.MainHero.Clan)
+					if (party.LeaderHero != null && (party.LeaderHero.IsHumanPlayerCharacter || party.LeaderHero.Clan == Hero.MainHero.Clan))
 					{
 						result.Add(bonusPartySize, null, null);
 					}
 					break;
 				case "Only player faction":
-					if (party.LeaderHero.IsHumanPlayerCharacter || party.LeaderHero.Clan.MapFaction.Name == Hero.MainHero.Clan.MapFaction.Name)
+					if (party.LeaderHero != null && (party.LeaderHero.IsHumanPlayerCharacter || party.LeaderHero.Clan.MapFaction.Name == Hero.MainHero.Clan.MapFaction.Name))
 					{
 						result.Add(bonusPartySize, null, null);
 					}
