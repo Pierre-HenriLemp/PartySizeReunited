@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <Name value="PartySizeReunited"/>
+  <Id value="PartySizeReunited"/>
+  <Version value="v2.0.5"/>
+	<ModuleCategory value="Singleplayer"/>
+	<ModuleType value ="Community" />
+  <DependedModules>
+    <DependedModule Id="Native" DependentVersion="v1.0.0" />
+    <DependedModule Id="SandBoxCore" DependentVersion="v1.0.0" />
+    <DependedModule Id="Sandbox" DependentVersion="v1.0.0" />
+    <DependedModule Id="CustomBattle" DependentVersion="v1.0.0"/>
+    <DependedModule Id="StoryMode" DependentVersion="v1.0.0" />
+  </DependedModules>
+  <SubModules>
+    <SubModule>
+      <Name value="PartySizeReunited"/>
+      <DLLName value="PartySizeReunited.dll"/>
+      <SubModuleClassType value="PartySizeReunited.SubModule"/>
+      <Tags>
+        <Tag key="DedicatedServerType" value="none" />
+        <Tag key="IsNoRenderModeElement" value="false" />
+      </Tags>
+    </SubModule>
+  </SubModules>
+	<Xmls/>
+</Module>
