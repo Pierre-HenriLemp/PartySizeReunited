@@ -1,4 +1,5 @@
-﻿using TaleWorlds.CampaignSystem;
+﻿using MCM.Common;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 
@@ -10,11 +11,39 @@ namespace PartySizeReunited
 		{
 			// Add parameters in order to add value for only player / Allies / All / etc.
 
+			Dropdown<string> bonusScope = MCMUISettings.Instance.BonusScope;
+			float bonusPartySize = MCMUISettings.Instance.PartyBonusAmnt;
+
 			ExplainedNumber result = base.GetPartyMemberSizeLimit(party, includeDescriptions);
-			bool flag = party.LeaderHero != null;
-			if (flag)
+
+			switch (bonusScope.SelectedValue)
 			{
-				result.Add(150f, null, null);
+				case "Everyone":
+					// Everyone party who have a leader hero
+					bool flag = party.LeaderHero != null;
+					if (flag)
+					{
+						result.Add(bonusPartySize, null, null);
+					}
+					break;
+				case "Only player":
+					if (party.LeaderHero.IsHumanPlayerCharacter)
+					{
+						result.Add(bonusPartySize, null, null);
+					}
+					break;
+				case "Only player clan":
+					if (party.LeaderHero.IsHumanPlayerCharacter || party.LeaderHero.Clan == Hero.MainHero.Clan)
+					{
+						result.Add(bonusPartySize, null, null);
+					}
+					break;
+				case "Only player faction":
+					if (party.LeaderHero.IsHumanPlayerCharacter || party.LeaderHero.Clan.MapFaction.Name == Hero.MainHero.Clan.MapFaction.Name)
+					{
+						result.Add(bonusPartySize, null, null);
+					}
+					break;
 			}
 			return result;
 		}

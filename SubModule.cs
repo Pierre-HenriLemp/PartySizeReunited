@@ -13,6 +13,11 @@ namespace PartySizeReunited
 			this.AddModels(gameStarterObject);
 		}
 
+		protected override void OnBeforeInitialModuleScreenSetAsRoot()
+		{
+			base.OnBeforeInitialModuleScreenSetAsRoot();
+		}
+
 		protected virtual void AddModels(IGameStarter gameStarterObject)
 		{
 			this.ReplaceModel<DefaultPartySizeLimitModel, PartySize>(gameStarterObject);

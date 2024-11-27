@@ -13,6 +13,18 @@
     <DependedModule Id="StoryMode" DependentVersion="v1.0.0" />
   </DependedModules>
   <SubModules>
+		<SubModule>
+			<Name value="MCMv5" />
+			<DLLName value="MCMv5.dll" />
+			<SubModuleClassType value="MCM.MCMSubModule" />
+			<Tags />
+		</SubModule>
+		<SubModule>
+			<Name value="MCMv5 Basic Implementation" />
+			<DLLName value="MCMv5.dll" />
+			<SubModuleClassType value="MCM.Internal.MCMImplementationSubModule" />
+			<Tags />
+		</SubModule>
     <SubModule>
       <Name value="PartySizeReunited"/>
       <DLLName value="PartySizeReunited.dll"/>
