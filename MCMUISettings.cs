@@ -14,7 +14,7 @@ namespace PartySizeReunited
 		public override string FolderName => "PartySizeReunited";
 		public override string FormatType => "json";
 
-		[SettingPropertyFloatingInteger("Party value", 0f, 5000f, "0", Order = 0, RequireRestart = false, HintText = "How much party point you want to add to parties.\nYOU NEED TO RESTART YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME !")]
+		[SettingPropertyFloatingInteger("Bonus party points", 0f, 5000f, "0", Order = 0, RequireRestart = false, HintText = "How much party point you want to add to parties.\nYOU NEED TO RELOAD YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME!")]
 		[SettingPropertyGroup("General")]
 		public float PartyBonusAmnt
 		{
@@ -29,7 +29,7 @@ namespace PartySizeReunited
 			}
 		}
 
-		[SettingPropertyDropdown("Scope", Order = 1, RequireRestart = false, HintText = "Select the scope where you want the bonus to be applied.\n[Everyone] mean that every parties that have an hero leader.\nAll options always impact player party.\nYOU NEED TO RESTART YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME !")]
+		[SettingPropertyDropdown("Scope", Order = 1, RequireRestart = false, HintText = "Select the scope where you want the bonus to be applied.\n[Everyone] apply for every parties that have a hero leader.\nAll options always impact player party.\nYOU NEED TO RELOAD YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME!")]
 		[SettingPropertyGroup("General")]
 		public Dropdown<string> BonusScope { get; set; } = new Dropdown<string>(new string[]
 		{
