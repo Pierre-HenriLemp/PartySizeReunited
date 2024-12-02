@@ -2,19 +2,36 @@
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
 using MCM.Common;
+using PartySizeReunited.Models;
 
 namespace PartySizeReunited
 {
 	internal sealed class MCMUISettings : AttributeGlobalSettings<MCMUISettings> // AttributePerSaveSettings<MCMUISettings> AttributePerCampaignSettings<MCMUISettings>
 	{
-		private float _partyBonusAmnt = 150f;
+		private float _partyBonusAmnt = 0;
+		private bool _isPlayerPartyImpacted = true;
 
 		public override string Id => "PartySizeReunited";
 		public override string DisplayName => $"Party Size Reunited";
 		public override string FolderName => "PartySizeReunited";
 		public override string FormatType => "json";
 
-		[SettingPropertyFloatingInteger("Bonus party points", 0f, 5000f, "0", Order = 0, RequireRestart = false, HintText = "How much party point you want to add to parties.\nYOU NEED TO RELOAD YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME!")]
+		[SettingPropertyBool("Is applied to player party ?", Order = 0, RequireRestart = false, HintText = "If checked, player's party will be impacted by the amount you have selected in\nthe 'Party multiplicator' setting. If unchecked, player's party will not be impacted whatever option you choose. (Even 'Only player!!')\nYOU NEED TO RELOAD YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME!")]
+		[SettingPropertyGroup("General")]
+		public bool IsPlayerPartyImpacted
+		{
+			get => _isPlayerPartyImpacted;
+			set
+			{
+				if (_isPlayerPartyImpacted != value)
+				{
+					_isPlayerPartyImpacted = value;
+					OnPropertyChanged();
+				}
+			}
+		}
+
+		[SettingPropertyFloatingInteger("Party multiplicator", 0, 10, "#0%", Order = 1, RequireRestart = false, HintText = "Multiplicator that will be applied to the party size.\nYOU NEED TO RELOAD YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME!")]
 		[SettingPropertyGroup("General")]
 		public float PartyBonusAmnt
 		{
@@ -29,14 +46,15 @@ namespace PartySizeReunited
 			}
 		}
 
-		[SettingPropertyDropdown("Scope", Order = 1, RequireRestart = false, HintText = "Select the scope where you want the bonus to be applied.\n[Everyone] apply for every parties that have a hero leader.\nAll options always impact player party.\nYOU NEED TO RELOAD YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME!")]
+		[SettingPropertyDropdown("Scope", Order = 2, RequireRestart = false, HintText = "Select the scope where you want the bonus to be applied.\n[Everyone] apply for every parties that have a hero leader.\nYOU NEED TO RELOAD YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME!")]
 		[SettingPropertyGroup("General")]
-		public Dropdown<string> BonusScope { get; set; } = new Dropdown<string>(new string[]
+		public Dropdown<ScopeExtension> BonusScope { get; set; } = new Dropdown<ScopeExtension>(new ScopeExtension[]
 		{
-			"Everyone",
-			"Only player",
-			"Only player clan",
-			"Only player faction"
+			new (IScope.Everyone),
+			new (IScope.Only_player),
+			new (IScope.Only_player_clan),
+			new (IScope.Only_player_faction),
+			new (IScope.Only_ennemies)
 		}, selectedIndex: 0);
 	}
 
