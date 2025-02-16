@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -10,17 +9,16 @@ namespace PartySizeReunited
 		protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
 		{
 			base.OnGameStart(game, gameStarterObject);
-			this.AddModels(gameStarterObject);
+			gameStarterObject.AddModel(
+				new PartySize(
+					new Compatibilizer(gameStarterObject)
+					)
+				);
 		}
 
 		protected override void OnBeforeInitialModuleScreenSetAsRoot()
 		{
 			base.OnBeforeInitialModuleScreenSetAsRoot();
-		}
-
-		protected virtual void AddModels(IGameStarter gameStarterObject)
-		{
-			this.ReplaceModel<DefaultPartySizeLimitModel, PartySize>(gameStarterObject);
 		}
 
 		protected void ReplaceModel<TBaseType, TChildType>(IGameStarter gameStarterObject)
