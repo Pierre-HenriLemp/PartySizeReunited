@@ -9,11 +9,7 @@ namespace PartySizeReunited
 		protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
 		{
 			base.OnGameStart(game, gameStarterObject);
-			gameStarterObject.AddModel(
-				new PartySize(
-					new Compatibilizer(gameStarterObject)
-					)
-				);
+			gameStarterObject.AddModel(new PartySize());
 		}
 
 		protected override void OnBeforeInitialModuleScreenSetAsRoot()

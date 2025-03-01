@@ -1,7 +1,9 @@
-﻿using MCM.Common;
-using PartySizeReunited.ModCompatibility;
+﻿using HarmonyLib;
+using MCM.Common;
 using PartySizeReunited.Models;
+using StoryMode.GameComponents;
 using System;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
@@ -10,24 +12,48 @@ namespace PartySizeReunited
 {
 	public class PartySize : DefaultPartySizeLimitModel
 	{
-		private readonly Compatibilizer compatibilizer;
-
-		public PartySize(Compatibilizer compatibilizer)
-		{
-			this.compatibilizer = compatibilizer;
-		}
+		public PartySize() { }
 
 		public override ExplainedNumber GetPartyMemberSizeLimit(PartyBase party, bool includeDescriptions = false)
 		{
-			ExplainedNumber basePartySize = base.GetPartyPrisonerSizeLimit(party, includeDescriptions);
+			ExplainedNumber basePartySize = base.GetPartyMemberSizeLimit(party, includeDescriptions);
+			float totalBonus = 0;
 
-			if (compatibilizer.IsEagleRisingMod)
-				basePartySize = EagleRisingCompatibility.GetEagleRisingCompatibility(party, basePartySize, includeDescriptions);
+			// Get all classes that implement DefaultPartySizeLimitModel but are not StoryModePartySizeLimitModel and PartySize
+			var derivedTypes = AppDomain.CurrentDomain.GetAssemblies()
+				.SelectMany(a => a.GetTypes())
+				.Where(t =>
+					t.IsSubclassOf(typeof(DefaultPartySizeLimitModel))
+					&& !t.IsInstanceOfType(this)
+					&& !t.IsAssignableFrom(typeof(StoryModePartySizeLimitModel))
+					&& !t.IsAbstract
+					)
+				.ToList();
 
-			if (compatibilizer.IsImprovedGarrisonMod)
-				basePartySize = ImproveGarrisonCompatibility.GetImproveGarrisonCompatibility(party, basePartySize, includeDescriptions);
+			// Call all childs and retrieve bonus value to apply 
+			foreach (var type in derivedTypes)
+			{
+				var method = AccessTools.Method(type, "GetPartyMemberSizeLimit");
+				Console.WriteLine($"Executing override from {method.DeclaringType.Name}");
+				// Instancier la classe correspondante et appeler la méthode avec les bons paramètres
+				var instance = Activator.CreateInstance(method.DeclaringType);
+				ExplainedNumber returnedValue = (ExplainedNumber)method.Invoke(instance, new object[] { party, includeDescriptions });
 
-			return GetPartySizeUpdatedByPartySizeMod(party, basePartySize);
+				totalBonus += CalculBonus(basePartySize.BaseNumber, returnedValue.BaseNumber);
+			}
+
+			// get party size with mods modifiers applied
+			var partySizeWithModsApplied = new ExplainedNumber(basePartySize.BaseNumber + totalBonus, includeDescriptions, null);
+
+			// Apply PartySizeReunited bonus on the total
+			ExplainedNumber finalPartySize = GetPartySizeUpdatedByPartySizeMod(party, partySizeWithModsApplied);
+
+			return finalPartySize;
+		}
+
+		private float CalculBonus(float baseValue, float newValue)
+		{
+			return newValue - baseValue;
 		}
 
 		private ExplainedNumber GetPartySizeUpdatedByPartySizeMod(PartyBase party, ExplainedNumber basePartySize)
