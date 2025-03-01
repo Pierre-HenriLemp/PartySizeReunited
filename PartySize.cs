@@ -16,8 +16,7 @@ namespace PartySizeReunited
 
 		public override ExplainedNumber GetPartyMemberSizeLimit(PartyBase party, bool includeDescriptions = false)
 		{
-			ExplainedNumber basePartySize = base.GetPartyMemberSizeLimit(party, includeDescriptions);
-			float totalBonus = 0;
+			ExplainedNumber partySize = base.GetPartyMemberSizeLimit(party, includeDescriptions);
 
 			// Get all classes that implement DefaultPartySizeLimitModel but are not StoryModePartySizeLimitModel and PartySize
 			var derivedTypes = AppDomain.CurrentDomain.GetAssemblies()
@@ -37,23 +36,14 @@ namespace PartySizeReunited
 				Console.WriteLine($"Executing override from {method.DeclaringType.Name}");
 				// Instancier la classe correspondante et appeler la méthode avec les bons paramètres
 				var instance = Activator.CreateInstance(method.DeclaringType);
-				ExplainedNumber returnedValue = (ExplainedNumber)method.Invoke(instance, new object[] { party, includeDescriptions });
+				partySize = (ExplainedNumber)method.Invoke(instance, new object[] { party, includeDescriptions });
 
-				totalBonus += CalculBonus(basePartySize.BaseNumber, returnedValue.BaseNumber);
 			}
 
-			// get party size with mods modifiers applied
-			var partySizeWithModsApplied = new ExplainedNumber(basePartySize.BaseNumber + totalBonus, includeDescriptions, null);
-
 			// Apply PartySizeReunited bonus on the total
-			ExplainedNumber finalPartySize = GetPartySizeUpdatedByPartySizeMod(party, partySizeWithModsApplied);
+			ExplainedNumber finalPartySize = GetPartySizeUpdatedByPartySizeMod(party, partySize);
 
 			return finalPartySize;
-		}
-
-		private float CalculBonus(float baseValue, float newValue)
-		{
-			return newValue - baseValue;
 		}
 
 		private ExplainedNumber GetPartySizeUpdatedByPartySizeMod(PartyBase party, ExplainedNumber basePartySize)
@@ -65,7 +55,8 @@ namespace PartySizeReunited
 
 			ExplainedNumber result = basePartySize;
 
-			float newValue = (float)Math.Round(result.BaseNumber * bonusPercentage);
+			float newValue = (float)Math.Round(result.ResultNumber * bonusPercentage);
+			float valueToApply = newValue - result.ResultNumber;
 
 			switch (selectedScope)
 			{
@@ -73,47 +64,35 @@ namespace PartySizeReunited
 					// Every party who have a leader hero
 					if (party.LeaderHero != null && !party.LeaderHero.IsHumanPlayerCharacter)
 					{
-						result.Add(ResetValue(result));
-						result.Add(newValue);
+						result.Add(valueToApply, new TaleWorlds.Localization.TextObject("Party Size bonus"));
 					}
 					break;
 				case IScope.Only_player_clan:
 					if (party.LeaderHero != null && !party.LeaderHero.IsHumanPlayerCharacter && party.LeaderHero.Clan == Hero.MainHero.Clan)
 					{
-						result.Add(ResetValue(result));
-						result.Add(newValue);
+						result.Add(valueToApply, new TaleWorlds.Localization.TextObject("Party Size bonus"));
 					}
 					break;
 				case IScope.Only_player_faction:
 					if (party.LeaderHero != null && !party.LeaderHero.IsHumanPlayerCharacter && party.LeaderHero.Clan.MapFaction.Name == Hero.MainHero.Clan.MapFaction.Name)
 					{
-						result.Add(ResetValue(result));
-						result.Add(newValue);
+						result.Add(valueToApply, new TaleWorlds.Localization.TextObject("Party Size bonus"));
 					}
 					break;
 				case IScope.Only_ennemies:
 					if (party.LeaderHero != null && !party.LeaderHero.IsHumanPlayerCharacter && party.LeaderHero.Clan.MapFaction.Name != Hero.MainHero.Clan.MapFaction.Name)
 					{
-						result.Add(ResetValue(result));
-						result.Add(newValue);
+						result.Add(valueToApply, new TaleWorlds.Localization.TextObject("Party Size bonus"));
 					}
 					break;
 			}
 
 			if (party.LeaderHero != null && isPlayerImpacted && party.LeaderHero.IsHumanPlayerCharacter)
 			{
-				result.Add(ResetValue(result));
-				result.Add(newValue);
+				result.Add(valueToApply, new TaleWorlds.Localization.TextObject("Party Size bonus"));
 			}
 
 			return result;
-
-		}
-
-		private float ResetValue(ExplainedNumber valueToReset)
-		{
-			float val = valueToReset.BaseNumber * -1;
-			return val;
 		}
 	}
 }
