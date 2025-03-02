@@ -16,7 +16,7 @@ namespace PartySizeReunited
 		public override string FolderName => "PartySizeReunited";
 		public override string FormatType => "json";
 
-		[SettingPropertyBool("Is applied to player party ?", Order = 0, RequireRestart = false, HintText = "If checked, player's party will be impacted by the amount you have selected in\nthe 'Party multiplicator' setting. If unchecked, player's party will not be impacted whatever option you choose. (Even 'Only player!!')\nYOU NEED TO RELOAD YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME!")]
+		[SettingPropertyBool("Is applied to player party ?", Order = 0, RequireRestart = false, HintText = "If checked, player's party will be impacted by the amount you have selected in\nthe 'Party multiplicator' setting. If unchecked, player's party will not be impacted whatever option you choose. (Even 'Only player!!')")]
 		[SettingPropertyGroup("General")]
 		public bool IsPlayerPartyImpacted
 		{
@@ -31,7 +31,7 @@ namespace PartySizeReunited
 			}
 		}
 
-		[SettingPropertyFloatingInteger("Party multiplicator", 0, 10, "#0%", Order = 1, RequireRestart = false, HintText = "Multiplicator that will be applied to the party size.\nYOU NEED TO RELOAD YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME!")]
+		[SettingPropertyFloatingInteger("Party multiplicator", 0, 10, "#0%", Order = 1, RequireRestart = false, HintText = "Multiplicator that will be applied to the party size.")]
 		[SettingPropertyGroup("General")]
 		public float PartyBonusAmnt
 		{
@@ -46,7 +46,7 @@ namespace PartySizeReunited
 			}
 		}
 
-		[SettingPropertyDropdown("Scope", Order = 2, RequireRestart = false, HintText = "Select the scope where you want the bonus to be applied.\n[Everyone] apply for every parties that have a hero leader.\nYOU NEED TO RELOAD YOUR SAVE IN ORDER TO APPLY CHANGES IF YOU UPDATE IT IN-GAME!")]
+		[SettingPropertyDropdown("Scope", Order = 2, RequireRestart = false, HintText = "Select the scope where you want the bonus to be applied.\n[Everyone] apply for every parties that have a hero leader.")]
 		[SettingPropertyGroup("General")]
 		public Dropdown<ScopeExtension> BonusScope { get; set; } = new Dropdown<ScopeExtension>(new ScopeExtension[]
 		{

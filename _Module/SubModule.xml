@@ -2,13 +2,13 @@
 <Module>
   <Name value="PartySizeReunited"/>
   <Id value="PartySizeReunited"/>
-  <Version value="v1.2.3"/>
+  <Version value="v1.2.4"/>
 	<ModuleCategory value="Singleplayer"/>
 	<ModuleType value ="Community" />
   <DependedModules>
     <DependedModule Id="Native" DependentVersion="v1.0.0" />
     <DependedModule Id="SandBoxCore" DependentVersion="v1.0.0" />
-    <DependedModule Id="Sandbox" DependentVersion="v1.0.0" />
+		<DependedModule Id="Sandbox" DependentVersion="v1.0.0" />
     <DependedModule Id="CustomBattle" DependentVersion="v1.0.0"/>
     <DependedModule Id="StoryMode" DependentVersion="v1.0.0" />
 		<DependedModule Id="Bannerlord.MBOptionScreen"/>

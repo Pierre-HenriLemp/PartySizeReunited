@@ -1,48 +1,43 @@
-﻿using HarmonyLib;
-using MCM.Common;
+﻿using MCM.Common;
 using PartySizeReunited.Models;
-using StoryMode.GameComponents;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.Localization;
 
 namespace PartySizeReunited
 {
 	public class PartySize : DefaultPartySizeLimitModel
 	{
-		public PartySize() { }
+		private readonly List<DefaultPartySizeLimitModel> _partySizeModels;
+
+		public PartySize(List<DefaultPartySizeLimitModel> partySizeModels = null)
+		{
+			_partySizeModels = partySizeModels ?? new List<DefaultPartySizeLimitModel>();
+		}
 
 		public override ExplainedNumber GetPartyMemberSizeLimit(PartyBase party, bool includeDescriptions = false)
 		{
 			ExplainedNumber partySize = base.GetPartyMemberSizeLimit(party, includeDescriptions);
 
-			// Get all classes that implement DefaultPartySizeLimitModel but are not StoryModePartySizeLimitModel and PartySize
-			var derivedTypes = AppDomain.CurrentDomain.GetAssemblies()
-				.SelectMany(a => a.GetTypes())
-				.Where(t =>
-					t.IsSubclassOf(typeof(DefaultPartySizeLimitModel))
-					&& !t.IsInstanceOfType(this)
-					&& !t.IsAssignableFrom(typeof(StoryModePartySizeLimitModel))
-					&& !t.IsAbstract
-					)
-				.ToList();
-
-			// Call all childs and retrieve bonus value to apply 
-			foreach (var type in derivedTypes)
+			// Appliquer tous les modèles de taille découverts
+			foreach (var model in _partySizeModels)
 			{
-				var method = AccessTools.Method(type, "GetPartyMemberSizeLimit");
-				Console.WriteLine($"Executing override from {method.DeclaringType.Name}");
-				// Instancier la classe correspondante et appeler la méthode avec les bons paramètres
-				var instance = Activator.CreateInstance(method.DeclaringType);
-				partySize = (ExplainedNumber)method.Invoke(instance, new object[] { party, includeDescriptions });
-
+				try
+				{
+					Console.WriteLine($"Applying party size model from {model.GetType().Name}");
+					partySize = model.GetPartyMemberSizeLimit(party, includeDescriptions);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine($"Error applying model {model.GetType().Name}: {ex.Message}");
+				}
 			}
 
-			// Apply PartySizeReunited bonus on the total
+			// Appliquer le bonus de PartySizeReunited
 			ExplainedNumber finalPartySize = GetPartySizeUpdatedByPartySizeMod(party, partySize);
-
 			return finalPartySize;
 		}
 
@@ -52,48 +47,61 @@ namespace PartySizeReunited
 			IScope selectedScope = bonusScope.SelectedValue.Scope;
 			float bonusPercentage = MCMUISettings.Instance.PartyBonusAmnt;
 			bool isPlayerImpacted = MCMUISettings.Instance.IsPlayerPartyImpacted;
+			TextObject partySizeBonusText = new TextObject("Party Size modifier");
 
 			ExplainedNumber result = basePartySize;
-
 			float newValue = (float)Math.Round(result.ResultNumber * bonusPercentage);
 			float valueToApply = newValue - result.ResultNumber;
 
-			switch (selectedScope)
+			if (party.LeaderHero != null)
 			{
-				case IScope.Everyone:
-					// Every party who have a leader hero
-					if (party.LeaderHero != null && !party.LeaderHero.IsHumanPlayerCharacter)
-					{
-						result.Add(valueToApply, new TaleWorlds.Localization.TextObject("Party Size bonus"));
-					}
-					break;
-				case IScope.Only_player_clan:
-					if (party.LeaderHero != null && !party.LeaderHero.IsHumanPlayerCharacter && party.LeaderHero.Clan == Hero.MainHero.Clan)
-					{
-						result.Add(valueToApply, new TaleWorlds.Localization.TextObject("Party Size bonus"));
-					}
-					break;
-				case IScope.Only_player_faction:
-					if (party.LeaderHero != null && !party.LeaderHero.IsHumanPlayerCharacter && party.LeaderHero.Clan.MapFaction.Name == Hero.MainHero.Clan.MapFaction.Name)
-					{
-						result.Add(valueToApply, new TaleWorlds.Localization.TextObject("Party Size bonus"));
-					}
-					break;
-				case IScope.Only_ennemies:
-					if (party.LeaderHero != null && !party.LeaderHero.IsHumanPlayerCharacter && party.LeaderHero.Clan.MapFaction.Name != Hero.MainHero.Clan.MapFaction.Name)
-					{
-						result.Add(valueToApply, new TaleWorlds.Localization.TextObject("Party Size bonus"));
-					}
-					break;
+				switch (selectedScope)
+				{
+					case IScope.Everyone:
+						if (!party.LeaderHero.IsHumanPlayerCharacter)
+						{
+							result.Add(valueToApply, partySizeBonusText);
+						}
+						break;
+
+					case IScope.Only_player_clan:
+						if (!party.LeaderHero.IsHumanPlayerCharacter &&
+							party.LeaderHero.Clan != null &&
+							Hero.MainHero?.Clan != null &&
+							party.LeaderHero.Clan == Hero.MainHero.Clan)
+						{
+							result.Add(valueToApply, partySizeBonusText);
+						}
+						break;
+
+					case IScope.Only_player_faction:
+						if (!party.LeaderHero.IsHumanPlayerCharacter &&
+							party.LeaderHero.Clan?.MapFaction != null &&
+							Hero.MainHero?.Clan?.MapFaction != null &&
+							party.LeaderHero.Clan.MapFaction.Name == Hero.MainHero.Clan.MapFaction.Name)
+						{
+							result.Add(valueToApply, partySizeBonusText);
+						}
+						break;
+
+					case IScope.Only_ennemies:
+						if (!party.LeaderHero.IsHumanPlayerCharacter &&
+							party.LeaderHero.Clan?.MapFaction != null &&
+							Hero.MainHero?.Clan?.MapFaction != null &&
+							party.LeaderHero.Clan.MapFaction.Name != Hero.MainHero.Clan.MapFaction.Name)
+						{
+							result.Add(valueToApply, partySizeBonusText);
+						}
+						break;
+				}
 			}
 
-			if (party.LeaderHero != null && isPlayerImpacted && party.LeaderHero.IsHumanPlayerCharacter)
+			if (isPlayerImpacted && party.LeaderHero?.IsHumanPlayerCharacter == true)
 			{
-				result.Add(valueToApply, new TaleWorlds.Localization.TextObject("Party Size bonus"));
+				result.Add(valueToApply, partySizeBonusText);
 			}
 
 			return result;
 		}
 	}
 }
-
