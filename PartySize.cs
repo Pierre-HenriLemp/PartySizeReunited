@@ -47,12 +47,11 @@ namespace PartySizeReunited
 			IScope selectedScope = bonusScope.SelectedValue.Scope;
 			float bonusPercentage = MCMUISettings.Instance.PartyBonusAmnt;
 			bool isPlayerImpacted = MCMUISettings.Instance.IsPlayerPartyImpacted;
-			TextObject partySizeBonusText = new TextObject("Party Size modifier");
+			TextObject partySizeBonusText = new TextObject("Party Size Reunited modifier");
 
 			ExplainedNumber result = basePartySize;
 			float newValue = (float)Math.Round(result.ResultNumber * bonusPercentage);
 			float valueToApply = newValue - result.ResultNumber;
-
 			if (party.LeaderHero != null)
 			{
 				switch (selectedScope)
@@ -61,6 +60,7 @@ namespace PartySizeReunited
 						if (!party.LeaderHero.IsHumanPlayerCharacter)
 						{
 							result.Add(valueToApply, partySizeBonusText);
+							SetNoMoreSupplyNeeded(party);
 						}
 						break;
 
@@ -71,6 +71,7 @@ namespace PartySizeReunited
 							party.LeaderHero.Clan == Hero.MainHero.Clan)
 						{
 							result.Add(valueToApply, partySizeBonusText);
+							SetNoMoreSupplyNeeded(party);
 						}
 						break;
 
@@ -81,6 +82,7 @@ namespace PartySizeReunited
 							party.LeaderHero.Clan.MapFaction.Name == Hero.MainHero.Clan.MapFaction.Name)
 						{
 							result.Add(valueToApply, partySizeBonusText);
+							SetNoMoreSupplyNeeded(party);
 						}
 						break;
 
@@ -91,17 +93,48 @@ namespace PartySizeReunited
 							party.LeaderHero.Clan.MapFaction.Name != Hero.MainHero.Clan.MapFaction.Name)
 						{
 							result.Add(valueToApply, partySizeBonusText);
+							SetNoMoreSupplyNeeded(party);
 						}
 						break;
 				}
-			}
 
-			if (isPlayerImpacted && party.LeaderHero?.IsHumanPlayerCharacter == true)
-			{
-				result.Add(valueToApply, partySizeBonusText);
+				if (isPlayerImpacted && party.LeaderHero.IsHumanPlayerCharacter == true)
+				{
+					// Update player's party
+					result.Add(valueToApply, partySizeBonusText);
+				}
 			}
 
 			return result;
+		}
+
+		private void SetNoMoreSupplyNeeded(PartyBase party)
+		{
+			bool noMoreSupplyNeeded = MCMUISettings.Instance.NoMoreSupplyIssues;
+			if (noMoreSupplyNeeded)
+			{
+				SetGoldBonus(party);
+				SetFoodBonus(party);
+			}
+
+		}
+
+		private void SetGoldBonus(PartyBase party)
+		{
+			if (party.LeaderHero.Gold < party.MobileParty.TotalWage)
+			{
+				int bonus = party.MobileParty.TotalWage * 2;
+				party.LeaderHero.Gold += bonus;
+			}
+		}
+
+		private void SetFoodBonus(PartyBase party)
+		{
+			if (party.RemainingFoodPercentage < 1000)
+			{
+				int bonus = party.NumberOfAllMembers > 200 ? party.NumberOfAllMembers * 2 : 200;
+				party.RemainingFoodPercentage += bonus * 10;
+			}
 		}
 	}
 }

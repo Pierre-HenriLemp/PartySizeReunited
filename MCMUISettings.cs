@@ -10,13 +10,14 @@ namespace PartySizeReunited
 	{
 		private float _partyBonusAmnt = 0;
 		private bool _isPlayerPartyImpacted = true;
+		private bool _noMoreSupplyIssue = false;
 
 		public override string Id => "PartySizeReunited";
-		public override string DisplayName => $"Party Size Reunited";
+		public override string DisplayName => "Party Size Reunited";
 		public override string FolderName => "PartySizeReunited";
 		public override string FormatType => "json";
 
-		[SettingPropertyBool("Is applied to player party ?", Order = 0, RequireRestart = false, HintText = "If checked, player's party will be impacted by the amount you have selected in\nthe 'Party multiplicator' setting. If unchecked, player's party will not be impacted whatever option you choose. (Even 'Only player!!')")]
+		[SettingPropertyBool("Also apply to player party", Order = 0, RequireRestart = false, HintText = "If checked, player's party will be impacted by the amount you have selected in\nthe 'Party multiplicator' setting. If unchecked, player's party will not be impacted whatever option you choose. (Even 'Only player!!')")]
 		[SettingPropertyGroup("General")]
 		public bool IsPlayerPartyImpacted
 		{
@@ -56,6 +57,23 @@ namespace PartySizeReunited
 			new (IScope.Only_player_faction),
 			new (IScope.Only_ennemies)
 		}, selectedIndex: 0);
+
+
+
+		[SettingPropertyBool("AI no more supplies issue", Order = 3, RequireRestart = false, HintText = "EXPERIMENTAL ! Allow AI parties affected by Party Size Reunited to NEVER have depleted gold and food.")]
+		[SettingPropertyGroup("General")]
+		public bool NoMoreSupplyIssues
+		{
+			get => _noMoreSupplyIssue;
+			set
+			{
+				if (_noMoreSupplyIssue != value)
+				{
+					_noMoreSupplyIssue = value;
+					OnPropertyChanged();
+				}
+			}
+		}
 	}
 
 }
