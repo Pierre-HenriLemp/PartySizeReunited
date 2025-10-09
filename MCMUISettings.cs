@@ -8,7 +8,8 @@ namespace PartySizeReunited
 {
 	internal sealed class MCMUISettings : AttributeGlobalSettings<MCMUISettings> // AttributePerSaveSettings<MCMUISettings> AttributePerCampaignSettings<MCMUISettings>
 	{
-		private float _partyBonusAmnt = 0;
+		private float _partyBonusAmnt = 0f;
+		private float _partyInfluenceCost = 0f; // Percentage
 		private bool _isPlayerPartyImpacted = true;
 		private bool _noMoreSupplyIssue = false;
 
@@ -74,6 +75,22 @@ namespace PartySizeReunited
 				}
 			}
 		}
+
+		[SettingPropertyFloatingInteger("Party recrutment cost multiplier", 0, 1, "#0%", Order = 4, RequireRestart = false, HintText = "Multiply party recrutment cost by this multiplier for anyone (Player and IA)")]
+		[SettingPropertyGroup("General")]
+		public float PartyInfluenceCost
+		{
+			get => _partyInfluenceCost;
+			set
+			{
+				if (_partyInfluenceCost != value)
+				{
+					_partyInfluenceCost = value;
+					OnPropertyChanged();
+				}
+			}
+		}
+
 	}
 
 }
