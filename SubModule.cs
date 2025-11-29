@@ -5,23 +5,22 @@ using TaleWorlds.MountAndBlade;
 
 namespace PartySizeReunited
 {
-	public class SubModule : MBSubModuleBase
-	{
-		public const string ModuleId = "PartySizeReunited";
+    public class SubModule : MBSubModuleBase
+    {
+        public const string ModuleId = "PartySizeReunited";
 
-		protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
-		{
-			base.OnGameStart(game, gameStarterObject);
+        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
+        {
+            base.OnGameStart(game, gameStarterObject);
 
-			// Découvrir tous les modèles de taille de parti
-			var discoveryService = new PartySizeModelDiscoveryService();
-			var partySizeModels = discoveryService.DiscoverPartySizeModels();
+            // Découvrir tous les modèles de taille de parti
+            var discoveryService = new PartySizeModelDiscoveryService();
+            var partySizeModels = discoveryService.DiscoverPartySizeModels();
 
-			// Injecter les modèles dans notre PartySize
-			gameStarterObject.AddModel(new PartySize(partySizeModels));
-
-			new Harmony(ModuleId).PatchAll();
-		}
-	}
+            // Injecter les modèles dans notre PartySize
+            gameStarterObject.AddModel(new PartySize(partySizeModels));
+            new Harmony(ModuleId).PatchAll();
+        }
+    }
 }
 

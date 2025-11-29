@@ -10,7 +10,7 @@
     <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
     <FileUpgradeFlags>40</FileUpgradeFlags>
     <OldToolsVersion>Current</OldToolsVersion>
-  </PropertyGroup>  
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll" Exclude="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Native.dll">
       <HintPath>%(Identity)</HintPath>
