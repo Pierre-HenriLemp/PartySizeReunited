@@ -18,7 +18,6 @@ namespace PartySizeReunited.HarmonyPatches
                 fieldRef(__instance) = TextObject.GetEmpty();
                 __instance.IsEligible = true;
             }
-
         }
     }
 }

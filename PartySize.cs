@@ -43,14 +43,17 @@ namespace PartySizeReunited
 
         private ExplainedNumber GetPartySizeUpdatedByPartySizeMod(PartyBase party, ExplainedNumber basePartySize)
         {
-            Dropdown<ScopeExtension> bonusScope = MCMUISettings.Instance.BonusScope;
+            Dropdown<ScopeExtension> bonusScope = SubModule.PartySizeReunitedOptions.BonusScope;
             IScope selectedScope = bonusScope.SelectedValue.Scope;
-            float bonusPercentage = MCMUISettings.Instance.PartyBonusAmnt;
-            bool isPlayerImpacted = MCMUISettings.Instance.IsPlayerPartyImpacted;
+            float bonusPercentage = SubModule.PartySizeReunitedOptions.PartyBonusAmnt;
+            int fixedBonus = SubModule.PartySizeReunitedOptions.FixedBonusAmnt;
+            bool isPlayerImpacted = SubModule.PartySizeReunitedOptions.IsPlayerPartyImpacted;
             TextObject partySizeBonusText = new TextObject("Party Size Reunited modifier");
 
             ExplainedNumber result = basePartySize;
-            float newValue = (float)Math.Round(result.ResultNumber * bonusPercentage);
+            float newValue = fixedBonus != 0 ?
+                result.ResultNumber + fixedBonus : // If fixedBonus is set
+                (float)Math.Round(result.ResultNumber * bonusPercentage); // If not, we take the multiplicator
             float valueToApply = newValue - result.ResultNumber;
             if (party.LeaderHero != null)
             {
@@ -110,13 +113,12 @@ namespace PartySizeReunited
 
         private void SetNoMoreSupplyNeeded(PartyBase party)
         {
-            bool noMoreSupplyNeeded = MCMUISettings.Instance.NoMoreSupplyIssues;
+            bool noMoreSupplyNeeded = SubModule.PartySizeReunitedOptions.NoMoreSupplyIssues;
             if (noMoreSupplyNeeded)
             {
                 SetGoldBonus(party);
                 SetFoodBonus(party);
             }
-
         }
 
         private void SetGoldBonus(PartyBase party)
