@@ -36,9 +36,7 @@ namespace PartySizeReunited
                 }
             }
 
-            // Appliquer le bonus de PartySizeReunited
-            ExplainedNumber finalPartySize = GetPartySizeUpdatedByPartySizeMod(party, partySize);
-            return finalPartySize;
+            return SubModule.PartySizeReunitedOptions.IsActivate ? GetPartySizeUpdatedByPartySizeMod(party, partySize) : partySize;
         }
 
         private ExplainedNumber GetPartySizeUpdatedByPartySizeMod(PartyBase party, ExplainedNumber basePartySize)

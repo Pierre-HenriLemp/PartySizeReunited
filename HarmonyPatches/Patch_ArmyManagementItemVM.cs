@@ -9,6 +9,11 @@ namespace PartySizeReunited.HarmonyPatches
     {
         static void Postfix(ArmyManagementItemVM __instance)
         {
+            if (!SubModule.PartySizeReunitedOptions.IsActivate)
+            {
+                return;
+            }
+
             // If current party has more than 99 troops, then allow to recruit it
             int partyCurrentSize = __instance.Party.MemberRoster.TotalManCount;
 

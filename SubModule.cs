@@ -17,6 +17,8 @@ namespace PartySizeReunited
 
         public static WarSailsOptions WarSailsOptions = new();
         public static PartySizeReunitedOptions PartySizeReunitedOptions = new();
+        public static CompanionsOptions CompanionsOptions = new();
+        public static PartyRecruitmentOptions partyRecruitmentOptions = new();
         public static bool isWarSailsModulePresent = false;
 
         private static readonly Harmony harmony = new(ModuleId);
@@ -56,8 +58,9 @@ namespace PartySizeReunited
                 );
 
             ISettingsBuilder builder = McMSettings.InitMcMSettings();
-            MCMPartySizeReunitedSettings.AddPartySizeSettings(builder, PartySizeReunitedOptions);
+            McMPartySizeReunitedSettings.AddPartySizeSettings(builder, PartySizeReunitedOptions);
             AddMoreSettings(builder);
+            AddPartyAndCompanionSettings(builder);
             settings = builder.BuildAsGlobal();
             settings?.Register();
         }
@@ -67,11 +70,17 @@ namespace PartySizeReunited
             if (isWarSailsModulePresent)
             {
                 // Add WarSails mod options
-                McMWarSails.AddWarsailsSettings(builder, WarSailsOptions);
+                McMWarSailsSettings.AddWarsailsSettings(builder, WarSailsOptions);
 
                 // Patch Warsails deployment method
                 Patch_ShipDeploymentModel.TryApplyPatch(harmony);
             }
+        }
+
+        private void AddPartyAndCompanionSettings(ISettingsBuilder builder)
+        {
+            McMCompanionSettings.AddCompanionsSettings(builder, CompanionsOptions);
+            McMPartyRecruitmentSettings.AddPartyRecruitmentSettings(builder, partyRecruitmentOptions);
         }
     }
 }

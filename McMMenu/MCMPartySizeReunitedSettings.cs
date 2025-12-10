@@ -5,8 +5,9 @@ using PartySizeReunited.Models;
 
 namespace PartySizeReunited.McMMenu
 {
-    internal static class MCMPartySizeReunitedSettings
+    internal static class McMPartySizeReunitedSettings
     {
+        private static readonly string isActivateHint = "Should party size options be activated?";
         private static readonly string partyImpactedHint = "If check, player's party will be impacted by the amount you have selected in\nthe 'Party multiplicator' setting. If uncheck, player's party will not be impacted whatever option you choose. (Even 'Only player!!')";
         private static readonly string partyBonusHint = "Multiplicator that will be applied to party size.\nIF \"Fixed bonus amount\" IS SET, THIS SETTING IS IGNORED!!!!";
         private static readonly string scopeHint = "Select scope where you want bonus to be applied.\n[Everyone] apply for every parties that have a hero leader.";
@@ -18,17 +19,24 @@ namespace PartySizeReunited.McMMenu
         {
             return builder
                 .SetSubFolder("PartySizeReunited")
-                .CreateGroup("PartySizeReunited", BuildPartySize);
+                .CreateGroup("Party Size", BuildPartySize);
 
             void BuildPartySize(ISettingsPropertyGroupBuilder builder)
                 => builder
+                .AddBool("psr_party_size_activate", "Activate?",
+                             new ProxyRef<bool>(() => opt.IsActivate, value => opt.IsActivate = value),
+                             propBuilder => propBuilder
+                             .SetHintText(isActivateHint)
+                             .SetRequireRestart(false)
+                             .SetOrder(0)
+                )
                 .AddBool(
                     "psr_is_player_party_impacted", "Apply also to player",
                              new ProxyRef<bool>(() => opt.IsPlayerPartyImpacted, value => opt.IsPlayerPartyImpacted = value),
                              propBuilder => propBuilder
                              .SetHintText(partyImpactedHint)
                              .SetRequireRestart(false)
-                             .SetOrder(0)
+                             .SetOrder(1)
                 )
                 .AddDropdown("psr_bonus_scope", "Scope", 0,
                              new ProxyRef<Dropdown<ScopeExtension>>(
@@ -37,21 +45,21 @@ namespace PartySizeReunited.McMMenu
                              propBuilder => propBuilder
                              .SetHintText(scopeHint)
                              .SetRequireRestart(false)
-                             .SetOrder(1)
+                             .SetOrder(2)
                              )
                 .AddInteger("psr_fixed_bonus_amnt", "Fixed bonus amount", 0, 10000,
                              new ProxyRef<int>(() => opt.FixedBonusAmnt, value => opt.FixedBonusAmnt = value),
                              propBuilder => propBuilder
                              .SetHintText(fixedBonusAmntHint)
                              .SetRequireRestart(false)
-                             .SetOrder(2)
+                             .SetOrder(3)
                 )
                 .AddFloatingInteger("psr_party_bonus", "Party multiplicator", 0, 10,
                              new ProxyRef<float>(() => opt.PartyBonusAmnt, value => opt.PartyBonusAmnt = value),
                              propBuilder => propBuilder
                              .SetHintText(partyBonusHint)
                              .SetRequireRestart(false)
-                             .SetOrder(3)
+                             .SetOrder(4)
                              .AddValueFormat("#0%")
                              )
                 .AddBool("psr_no_more_supply", "no more AI supply issue",
@@ -59,14 +67,14 @@ namespace PartySizeReunited.McMMenu
                              propBuilder => propBuilder
                              .SetHintText(noMoreSupplyHint)
                              .SetRequireRestart(false)
-                             .SetOrder(4)
+                             .SetOrder(5)
                              )
                 .AddFloatingInteger("psr_influence_cost", "Party recruitment cost multiplier", 0, 1,
                              new ProxyRef<float>(() => opt.PartyInfluenceCost, value => opt.PartyInfluenceCost = value),
                              propBuilder => propBuilder
                              .SetHintText(influenceCostHint)
                              .SetRequireRestart(false)
-                             .SetOrder(5)
+                             .SetOrder(6)
                              .AddValueFormat("#0%")
                              )
                 .SetGroupOrder(0);

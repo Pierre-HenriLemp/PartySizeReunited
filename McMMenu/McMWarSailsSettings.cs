@@ -4,7 +4,7 @@ using PartySizeReunited.McMMenu.Options;
 
 namespace PartySizeReunited.McMMenu
 {
-    internal static class McMWarSails
+    internal static class McMWarSailsSettings
     {
         public static readonly string moreBoatHint = "Increase ship deployment limit by the amount selected.\n(You can NOT have more than 8 ships at once in battle)";
         public static readonly string onlyApplyToPlayerHint = "Should bonus only given to player?";
@@ -13,11 +13,11 @@ namespace PartySizeReunited.McMMenu
         {
             return builder
                 .SetSubFolder("WarSails")
-                .CreateGroup("WarSails", BuildWarSails);
+                .CreateGroup("WarSails DLC", BuildWarSails);
 
             void BuildWarSails(ISettingsPropertyGroupBuilder builder)
                 => builder
-                .AddBool("psr_only_apply_to_player", "Only apply to player",
+                .AddBool("psr_only_apply_to_player", "Only apply to player?",
                              new ProxyRef<bool>(() => opt.OnlyApplyToPlayer, value => opt.OnlyApplyToPlayer = value),
                              propBuilder => propBuilder
                              .SetRequireRestart(false)

@@ -1,0 +1,15 @@
+﻿using MCM.Common;
+
+namespace PartySizeReunited.McMMenu.Options
+{
+    public class PartyRecruitmentOptions
+    {
+        public bool IsActivate { get; set; }
+        public Dropdown<OptionType> Type { get; set; } = new Dropdown<OptionType>(new OptionType[]
+        {
+            new (OptionTypeEnum.STATIC),
+            new (OptionTypeEnum.PROGRESSIVE)
+        }, 0);
+        public int Amount { get; set; }
+    }
+}
