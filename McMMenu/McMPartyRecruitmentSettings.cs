@@ -41,7 +41,7 @@ namespace PartySizeReunited.McMMenu
                              .SetHintText(partyLimitHint)
                              .SetOrder(2)
                 )
-                .SetGroupOrder(3);
+                .SetGroupOrder(6);
         }
     }
 }

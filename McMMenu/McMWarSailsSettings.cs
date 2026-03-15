@@ -34,7 +34,7 @@ namespace PartySizeReunited.McMMenu
                             .SetHintText(moreBoatHint)
                             .SetOrder(1)
                             )
-                    .SetGroupOrder(1);
+                    .SetGroupOrder(7);
         }
     }
 }

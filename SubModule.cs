@@ -21,10 +21,12 @@ namespace PartySizeReunited
         public static PartyRecruitmentOptions partyRecruitmentOptions = new();
         public static bool isWarSailsModulePresent = false;
 
-        private static readonly Harmony harmony = new(ModuleId);
+        private static Harmony _harmony;
         private static FluentGlobalSettings? settings;
 
         private bool initOnce = false;
+
+
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
@@ -36,7 +38,25 @@ namespace PartySizeReunited
 
             // Injecter les modèles dans notre PartySize
             gameStarterObject.AddModel(new PartySize(partySizeModels));
-            harmony.PatchAll();
+        }
+
+        protected override void OnSubModuleLoad()
+        {
+            base.OnSubModuleLoad();
+
+            if (_harmony != null)
+                return;
+
+            _harmony = new Harmony(ModuleId);
+            _harmony.PatchAll();
+        }
+
+        protected override void OnSubModuleUnloaded()
+        {
+            _harmony?.UnpatchAll(ModuleId);
+            _harmony = null;
+
+            base.OnSubModuleUnloaded();
         }
 
         public override void OnInitialState()
@@ -73,7 +93,11 @@ namespace PartySizeReunited
                 McMWarSailsSettings.AddWarsailsSettings(builder, WarSailsOptions);
 
                 // Patch Warsails deployment method
-                Patch_ShipDeploymentModel.TryApplyPatch(harmony);
+                Patch_NavalDLC_ShipDeploymentModel.TryApplyPatch(_harmony);
+                Patch_NavalDLC_PartyWage.TryApplyPatch(_harmony);
+                Patch_NavalDLC_PlayerPartyNavalSpeed.TryApplyPatch(_harmony);
+
+                Utils.Print("PartySizeReunited configured for WarSails DLC");
             }
         }
 

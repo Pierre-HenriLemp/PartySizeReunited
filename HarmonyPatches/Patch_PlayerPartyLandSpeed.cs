@@ -1,0 +1,37 @@
+﻿using HarmonyLib;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.GameComponents;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.Localization;
+
+namespace PartySizeReunited.HarmonyPatches
+{
+    [HarmonyPatch(typeof(DefaultPartySpeedCalculatingModel), "CalculateLandBaseSpeed")]
+    class Patch_PlayerPartyLandSpeed
+    {
+        public static void Postfix(MobileParty mobileParty, ref ExplainedNumber __result)
+        {
+            if (mobileParty.Party.LeaderHero != null && !mobileParty.Party.LeaderHero.IsHumanPlayerCharacter)
+            {
+                return;
+            }
+
+            var options = SubModule.PartySizeReunitedOptions;
+            TextObject description = new("PartySizeReunited modifier");
+            if (options.PlayerPartySpeedFixedBonus != 0)
+            {
+                __result.Add(
+                    options.PlayerPartySpeedFixedBonus,
+                    description
+                );
+            }
+            else
+            {
+                __result.AddFactor(
+                    options.PlayerPartySpeedMultiBonus,
+                    description
+                    );
+            }
+        }
+    }
+}

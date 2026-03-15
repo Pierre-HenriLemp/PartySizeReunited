@@ -43,21 +43,21 @@ namespace PartySizeReunited.Services
                     {
                         var instance = (DefaultPartySizeLimitModel)Activator.CreateInstance(type);
                         models.Add(instance);
-                        Console.WriteLine($"Discovered party size model: {type.Name}");
+                        Utils.Print($"Discovered party size model: {type.Name}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error instantiating {type.Name}: {ex.Message}");
+                        Utils.PrintError($"Error instantiating {type.Name}: {ex.Message}");
                     }
                 }
             }
             catch (ReflectionTypeLoadException ex)
             {
-                Console.WriteLine($"Error loading types: {ex.Message}");
+                Utils.PrintError($"Error loading types: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error during model discovery: {ex.Message}");
+                Utils.PrintError($"Unexpected error during model discovery: {ex.Message}");
             }
 
             return models;

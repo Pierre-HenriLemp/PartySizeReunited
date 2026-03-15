@@ -11,6 +11,22 @@ namespace PartySizeReunited.McMMenu.Options
         public float PartyBonusAmnt { get; set; } = 1f;
         public float PartyInfluenceCost { get; set; } = 1f;
         public int FixedBonusAmnt { get; set; } = 0;
+        // Caravan
+        public int CaravanFixedBonus { get; set; } = 0;
+        public float CaravanMultiBonus { get; set; } = 1f;
+        // Wage
+        public int PartyWageFixedBonus { get; set; } = 0;
+        public float PartyWageMultiBonus { get; set; } = 1f;
+        // Player speed
+        public int PlayerPartySpeedFixedBonus { get; set; } = 0;
+        public float PlayerPartySpeedMultiBonus { get; set; } = 1f;
+        // Garrison
+        public int PartyGarrisonFixedBonus { get; set; } = 0;
+        public float PartyGarrisonMultiBonus { get; set; } = 1f;
+        // Prisoner
+        public int PartyPrisonerFixedBonus { get; set; } = 0;
+        public float PartyPrisonerMultiBonus { get; set; } = 1f;
+
         public Dropdown<ScopeExtension> BonusScope { get; set; } = new Dropdown<ScopeExtension>(new ScopeExtension[]
         {
             new (IScope.Everyone),

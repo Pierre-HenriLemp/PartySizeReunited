@@ -1,11 +1,12 @@
 ﻿using HarmonyLib;
+using PartySizeReunited.Services;
 using System;
 using System.Linq;
 using System.Reflection;
 
 namespace PartySizeReunited.HarmonyPatches
 {
-    class Patch_ShipDeploymentModel
+    class Patch_NavalDLC_ShipDeploymentModel
     {
         public static void TryApplyPatch(Harmony harmony)
         {
@@ -18,7 +19,7 @@ namespace PartySizeReunited.HarmonyPatches
 
                 if (targetType == null)
                 {
-                    Console.WriteLine("NavalDLCShipDeploymentModel non trouvé, patch ignoré");
+                    Utils.PrintError("NavalDLCShipDeploymentModel non trouvé, patch ignoré");
                     return;
                 }
 
@@ -28,22 +29,20 @@ namespace PartySizeReunited.HarmonyPatches
 
                 if (originalMethod == null)
                 {
-                    Console.WriteLine("Méthode GetShipDeploymentLimit non trouvée");
+                    Utils.PrintError("Méthode GetShipDeploymentLimit non trouvée");
                     return;
                 }
 
                 // Obtenir la méthode de patch
-                MethodInfo patchMethod = typeof(Patch_ShipDeploymentModel).GetMethod(nameof(Postfix),
+                MethodInfo patchMethod = typeof(Patch_NavalDLC_ShipDeploymentModel).GetMethod(nameof(Postfix),
                     BindingFlags.Public | BindingFlags.Static);
 
                 // Appliquer le patch en Postfix
                 harmony.Patch(originalMethod, postfix: new HarmonyMethod(patchMethod));
-
-                Console.WriteLine("Patch NavalDLCShipDeploymentModel appliqué avec succès");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erreur lors du patch NavalDLCShipDeploymentModel: {ex.Message}");
+                Utils.PrintError($"Erreur lors du patch NavalDLCShipDeploymentModel: {ex.Message}");
             }
         }
 
@@ -76,7 +75,7 @@ namespace PartySizeReunited.HarmonyPatches
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erreur dans le patch ShipDeploymentModel: {ex.Message}");
+                Utils.PrintError($"Erreur dans le patch ShipDeploymentModel: {ex.Message}");
             }
         }
     }
