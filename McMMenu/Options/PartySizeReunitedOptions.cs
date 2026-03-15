@@ -32,7 +32,7 @@ namespace PartySizeReunited.McMMenu.Options
             new (IScope.Everyone),
             new (IScope.Only_player),
             new (IScope.Only_player_clan),
-            new (IScope.Only_player_faction),
+            new (IScope.Only_player_kingdom),
             new (IScope.Only_ennemies)
         }, 0);
     }

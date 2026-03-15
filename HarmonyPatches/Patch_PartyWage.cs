@@ -47,8 +47,8 @@ namespace PartySizeReunited.HarmonyPatches
                     }
                     break;
 
-                case IScope.Only_player_faction:
-                    if (ScopeExtension.IsOnlyPlayerFaction(mobileParty))
+                case IScope.Only_player_kingdom:
+                    if (ScopeExtension.IsOnlyPlayerKingdom(mobileParty))
                     {
                         __result.Add(valueToApply, partySizeBonusText);
                     }

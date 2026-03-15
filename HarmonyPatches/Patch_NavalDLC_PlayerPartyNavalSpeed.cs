@@ -51,7 +51,11 @@ namespace PartySizeReunited.HarmonyPatches
 
         public static void Postfix(MobileParty mobileParty, ref ExplainedNumber __result)
         {
-            if (mobileParty.Party.LeaderHero != null && !mobileParty.Party.LeaderHero.IsHumanPlayerCharacter)
+            if (!SubModule.PartySizeReunitedOptions.IsActivate)
+            {
+                return;
+            }
+            if (mobileParty.Party.LeaderHero == null || !mobileParty.Party.LeaderHero.IsHumanPlayerCharacter)
             {
                 return;
             }

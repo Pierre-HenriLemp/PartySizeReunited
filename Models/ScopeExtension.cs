@@ -28,30 +28,33 @@ namespace PartySizeReunited.Models
 
         public static bool IsOnlyPlayer(PartyBase party)
         {
-            return party.LeaderHero.IsHumanPlayerCharacter == true;
+            return party.Owner.IsHumanPlayerCharacter == true;
         }
 
         public static bool IsOnlyEnnemies(PartyBase party)
         {
-            return !party.LeaderHero.IsHumanPlayerCharacter &&
-                        party.LeaderHero.Clan?.MapFaction != null &&
-                        Hero.MainHero?.Clan?.MapFaction != null &&
-                        party.LeaderHero.Clan.MapFaction.Name != Hero.MainHero.Clan.MapFaction.Name;
+            return party.Owner == null ||
+                !party.Owner.IsHumanPlayerCharacter ||
+                party.Owner.Clan == null ||
+                party.Owner.Clan?.Kingdom == null ||
+                (Hero.MainHero?.Clan?.Kingdom != null && party.Owner.Clan.Kingdom.Name != Hero.MainHero.Clan.Kingdom.Name) ||
+                (Hero.MainHero?.Clan != null && party.Owner.Clan != Hero.MainHero?.Clan);
         }
 
-        public static bool IsOnlyEnnemies(IFaction faction)
+        public static bool IsOnlyEnnemies(Kingdom kingdom)
         {
-            return faction != null &&
-                        Hero.MainHero?.Clan?.MapFaction != null &&
-                        faction.Name != Hero.MainHero.Clan.MapFaction.Name;
+            return kingdom != null &&
+                        Hero.MainHero?.Clan?.Kingdom != null &&
+                        kingdom.Name != Hero.MainHero.Clan.Kingdom.Name;
         }
 
         public static bool IsOnlyPlayerClan(PartyBase party)
         {
-            return !party.LeaderHero.IsHumanPlayerCharacter &&
-                        party.LeaderHero.Clan != null &&
+            return party.Owner != null &&
+                !party.Owner.IsHumanPlayerCharacter &&
+                        party.Owner.Clan != null &&
                         Hero.MainHero?.Clan != null &&
-                        party.LeaderHero.Clan == Hero.MainHero.Clan;
+                        party.Owner.Clan == Hero.MainHero.Clan;
         }
 
         public static bool IsOnlyPlayerClan(Clan clan)
@@ -61,19 +64,20 @@ namespace PartySizeReunited.Models
                         clan == Hero.MainHero?.Clan;
         }
 
-        public static bool IsOnlyPlayerFaction(PartyBase party)
+        public static bool IsOnlyPlayerKingdom(PartyBase party)
         {
-            return !party.LeaderHero.IsHumanPlayerCharacter &&
-                        party.LeaderHero.Clan?.MapFaction != null &&
-                        Hero.MainHero?.Clan?.MapFaction != null &&
-                        party.LeaderHero.Clan.MapFaction.Name == Hero.MainHero.Clan.MapFaction.Name;
+            return party.Owner != null &&
+                !party.Owner.IsHumanPlayerCharacter &&
+                        party.Owner.Clan?.Kingdom != null &&
+                        Hero.MainHero?.Clan?.Kingdom != null &&
+                        party.Owner.Clan.Kingdom.Name == Hero.MainHero.Clan.Kingdom.Name;
         }
 
-        public static bool IsOnlyPlayerFaction(IFaction faction)
+        public static bool IsOnlyPlayerKingdom(Kingdom kingdom)
         {
-            return faction != null &&
-                        Hero.MainHero?.Clan?.MapFaction != null &&
-                        faction?.Name == Hero.MainHero?.Clan.MapFaction.Name;
+            return kingdom != null &&
+                        Hero.MainHero?.Clan?.Kingdom != null &&
+                        kingdom == Hero.MainHero?.Clan?.Kingdom;
         }
 
         public static bool IsEveryoneExceptPlayer(MobileParty party)
@@ -83,31 +87,34 @@ namespace PartySizeReunited.Models
 
         public static bool IsOnlyPlayer(MobileParty party)
         {
-            return party.LeaderHero?.IsHumanPlayerCharacter == true;
+            return party.IsMainParty == true;
         }
 
         public static bool IsOnlyEnnemies(MobileParty party)
         {
-            return !party.LeaderHero.IsHumanPlayerCharacter &&
-                        party.LeaderHero.Clan?.MapFaction != null &&
-                        Hero.MainHero?.Clan?.MapFaction != null &&
-                        party.LeaderHero.Clan.MapFaction.Name != Hero.MainHero.Clan.MapFaction.Name;
+            return !party.IsMainParty && (
+                        party.ActualClan?.Kingdom == null ||
+                        (
+                        Hero.MainHero?.Clan?.Kingdom != null &&
+                        party.ActualClan.Kingdom.Name != Hero.MainHero.Clan.Kingdom.Name
+                        )
+                        );
         }
 
         public static bool IsOnlyPlayerClan(MobileParty party)
         {
-            return !party.LeaderHero.IsHumanPlayerCharacter &&
-                        party.LeaderHero.Clan != null &&
+            return !party.IsMainParty &&
+                        party.ActualClan != null &&
                         Hero.MainHero?.Clan != null &&
-                        party.LeaderHero.Clan == Hero.MainHero.Clan;
+                        party.ActualClan == Hero.MainHero.Clan;
         }
 
-        public static bool IsOnlyPlayerFaction(MobileParty party)
+        public static bool IsOnlyPlayerKingdom(MobileParty party)
         {
-            return !party.LeaderHero.IsHumanPlayerCharacter &&
-                        party.LeaderHero.Clan?.MapFaction != null &&
-                        Hero.MainHero?.Clan?.MapFaction != null &&
-                        party.LeaderHero.Clan.MapFaction.Name == Hero.MainHero.Clan.MapFaction.Name;
+            return !party.IsMainParty &&
+                        party.ActualClan?.Kingdom != null &&
+                        Hero.MainHero?.Clan?.Kingdom != null &&
+                        party.ActualClan.Kingdom.Name == Hero.MainHero.Clan.Kingdom.Name;
         }
     }
 
@@ -122,8 +129,8 @@ namespace PartySizeReunited.Models
         [Description("Only player clan")]
         Only_player_clan,
 
-        [Description("Only player faction")]
-        Only_player_faction,
+        [Description("Only player kingdom")]
+        Only_player_kingdom,
 
         [Description("Only enemies")]
         Only_ennemies

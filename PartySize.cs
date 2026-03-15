@@ -76,8 +76,8 @@ namespace PartySizeReunited
                         }
                         break;
 
-                    case IScope.Only_player_faction:
-                        if (ScopeExtension.IsOnlyPlayerFaction(party))
+                    case IScope.Only_player_kingdom:
+                        if (ScopeExtension.IsOnlyPlayerKingdom(party))
                         {
                             result.Add(valueToApply, partySizeBonusText);
                             SetNoMoreSupplyNeeded(party);

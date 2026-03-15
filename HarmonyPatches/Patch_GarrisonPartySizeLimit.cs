@@ -50,8 +50,8 @@ namespace PartySizeReunited.HarmonyPatches
                 IScope.Everyone => true,
                 IScope.Only_player => options.IsPlayerPartyImpacted && settlement.Owner.IsHumanPlayerCharacter,
                 IScope.Only_player_clan => ScopeExtension.IsOnlyPlayerClan(settlement.OwnerClan),
-                IScope.Only_player_faction => ScopeExtension.IsOnlyPlayerFaction(settlement.MapFaction),
-                IScope.Only_ennemies => ScopeExtension.IsOnlyEnnemies(settlement.MapFaction),
+                IScope.Only_player_kingdom => ScopeExtension.IsOnlyPlayerKingdom(settlement.OwnerClan.Kingdom),
+                IScope.Only_ennemies => ScopeExtension.IsOnlyEnnemies(settlement.OwnerClan.Kingdom),
                 _ => false,
             };
         }
