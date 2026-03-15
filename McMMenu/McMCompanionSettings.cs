@@ -13,7 +13,6 @@ namespace PartySizeReunited.McMMenu
         public static ISettingsBuilder AddCompanionsSettings(ISettingsBuilder builder, CompanionsOptions opt)
         {
             return builder
-                .SetSubFolder("Companions")
                 .CreateGroup("Companions Limit", BuildCompanions);
 
             void BuildCompanions(ISettingsPropertyGroupBuilder builder)

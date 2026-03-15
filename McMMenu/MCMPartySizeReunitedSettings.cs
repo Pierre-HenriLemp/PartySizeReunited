@@ -41,7 +41,6 @@ namespace PartySizeReunited.McMMenu
         public static ISettingsBuilder AddPartySizeSettings(ISettingsBuilder builder, PartySizeReunitedOptions opt)
         {
             return builder
-                .SetSubFolder("PartySizeReunited")
                 .CreateGroup("Main", MainOption)
                 .CreateGroup("Wage", WageOption)
                 .CreateGroup("Prisoner", PrisonerOption)

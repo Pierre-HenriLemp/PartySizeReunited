@@ -13,7 +13,6 @@ namespace PartySizeReunited.McMMenu
         public static ISettingsBuilder AddPartyRecruitmentSettings(ISettingsBuilder builder, PartyRecruitmentOptions opt)
         {
             return builder
-                .SetSubFolder("PartyRecruitment")
                 .CreateGroup("Party Limit", Build);
 
             void Build(ISettingsPropertyGroupBuilder builder)

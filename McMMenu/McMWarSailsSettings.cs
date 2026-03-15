@@ -12,7 +12,6 @@ namespace PartySizeReunited.McMMenu
         public static ISettingsBuilder AddWarsailsSettings(ISettingsBuilder builder, WarSailsOptions opt)
         {
             return builder
-                .SetSubFolder("WarSails")
                 .CreateGroup("WarSails DLC", BuildWarSails);
 
             void BuildWarSails(ISettingsPropertyGroupBuilder builder)
