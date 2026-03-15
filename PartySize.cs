@@ -29,7 +29,6 @@ namespace PartySizeReunited
             {
                 try
                 {
-                    Utils.Print($"Applying party size model from {model.GetType().Name}");
                     partySize = model.GetPartyMemberSizeLimit(party, includeDescriptions);
                 }
                 catch (Exception ex)
