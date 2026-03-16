@@ -48,7 +48,7 @@ namespace PartySizeReunited.HarmonyPatches
             return options.BonusScope.SelectedValue.Scope switch
             {
                 IScope.Everyone => true,
-                IScope.Only_player => options.IsPlayerPartyImpacted && settlement.Owner.IsHumanPlayerCharacter,
+                IScope.Only_player => options.IsPlayerPartyImpacted && settlement.Owner != null && settlement.Owner.IsHumanPlayerCharacter,
                 IScope.Only_player_clan => ScopeExtension.IsOnlyPlayerClan(settlement.OwnerClan),
                 IScope.Only_player_kingdom => ScopeExtension.IsOnlyPlayerKingdom(settlement.OwnerClan.Kingdom),
                 IScope.Only_ennemies => ScopeExtension.IsOnlyEnnemies(settlement.OwnerClan.Kingdom),

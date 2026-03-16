@@ -28,7 +28,7 @@ namespace PartySizeReunited.Models
 
         public static bool IsOnlyPlayer(PartyBase party)
         {
-            return party.Owner.IsHumanPlayerCharacter == true;
+            return party.Owner != null && party.Owner.IsHumanPlayerCharacter == true;
         }
 
         public static bool IsOnlyEnnemies(PartyBase party)
