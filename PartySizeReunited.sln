@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PartySizeReunited", "PartySizeReunited.csproj", "{37A0815A-49EA-4276-8554-4FB0F4737C55}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartySizeReunited.Tests", "PartySizeReunited.Tests\PartySizeReunited.Tests.csproj", "{A718D7A5-730D-4D58-B7C0-FB25A5EEBA5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -15,6 +17,10 @@ Global
 		{37A0815A-49EA-4276-8554-4FB0F4737C55}.Debug|x64.Build.0 = Debug|x64
 		{37A0815A-49EA-4276-8554-4FB0F4737C55}.Release|x64.ActiveCfg = Release|x64
 		{37A0815A-49EA-4276-8554-4FB0F4737C55}.Release|x64.Build.0 = Release|x64
+		{A718D7A5-730D-4D58-B7C0-FB25A5EEBA5C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A718D7A5-730D-4D58-B7C0-FB25A5EEBA5C}.Debug|x64.Build.0 = Debug|Any CPU
+		{A718D7A5-730D-4D58-B7C0-FB25A5EEBA5C}.Release|x64.ActiveCfg = Release|Any CPU
+		{A718D7A5-730D-4D58-B7C0-FB25A5EEBA5C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

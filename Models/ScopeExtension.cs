@@ -17,7 +17,7 @@ namespace PartySizeReunited.Models
         public override string ToString()
         {
             var field = Scope.GetType().GetField(Scope.ToString());
-            var attribute = field.GetCustomAttribute<DescriptionAttribute>();
+            var attribute = field?.GetCustomAttribute<DescriptionAttribute>();
             return attribute?.Description ?? Scope.ToString();
         }
 
@@ -28,12 +28,12 @@ namespace PartySizeReunited.Models
 
         public static bool IsOnlyPlayer(PartyBase party)
         {
-            return party.Owner != null && party.Owner.IsHumanPlayerCharacter == true;
+            return party?.Owner != null && party.Owner.IsHumanPlayerCharacter == true;
         }
 
         public static bool IsOnlyEnnemies(PartyBase party)
         {
-            return party.Owner == null ||
+            return party?.Owner == null ||
                 !party.Owner.IsHumanPlayerCharacter ||
                 party.Owner.Clan == null ||
                 party.Owner.Clan?.Kingdom == null ||
@@ -50,7 +50,7 @@ namespace PartySizeReunited.Models
 
         public static bool IsOnlyPlayerClan(PartyBase party)
         {
-            return party.Owner != null &&
+            return party?.Owner != null &&
                 !party.Owner.IsHumanPlayerCharacter &&
                         party.Owner.Clan != null &&
                         Hero.MainHero?.Clan != null &&
@@ -66,7 +66,7 @@ namespace PartySizeReunited.Models
 
         public static bool IsOnlyPlayerKingdom(PartyBase party)
         {
-            return party.Owner != null &&
+            return party?.Owner != null &&
                 !party.Owner.IsHumanPlayerCharacter &&
                         party.Owner.Clan?.Kingdom != null &&
                         Hero.MainHero?.Clan?.Kingdom != null &&
@@ -87,12 +87,12 @@ namespace PartySizeReunited.Models
 
         public static bool IsOnlyPlayer(MobileParty party)
         {
-            return party.IsMainParty == true;
+            return party?.IsMainParty == true;
         }
 
         public static bool IsOnlyEnnemies(MobileParty party)
         {
-            return !party.IsMainParty && (
+            return party != null && !party.IsMainParty && (
                         party.ActualClan?.Kingdom == null ||
                         (
                         Hero.MainHero?.Clan?.Kingdom != null &&
@@ -103,7 +103,7 @@ namespace PartySizeReunited.Models
 
         public static bool IsOnlyPlayerClan(MobileParty party)
         {
-            return !party.IsMainParty &&
+            return party != null && !party.IsMainParty &&
                         party.ActualClan != null &&
                         Hero.MainHero?.Clan != null &&
                         party.ActualClan == Hero.MainHero.Clan;
@@ -111,7 +111,7 @@ namespace PartySizeReunited.Models
 
         public static bool IsOnlyPlayerKingdom(MobileParty party)
         {
-            return !party.IsMainParty &&
+            return party != null && !party.IsMainParty &&
                         party.ActualClan?.Kingdom != null &&
                         Hero.MainHero?.Clan?.Kingdom != null &&
                         party.ActualClan.Kingdom.Name == Hero.MainHero.Clan.Kingdom.Name;
