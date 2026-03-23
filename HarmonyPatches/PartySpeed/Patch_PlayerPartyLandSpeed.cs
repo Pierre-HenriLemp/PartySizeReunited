@@ -4,7 +4,7 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Localization;
 
-namespace PartySizeReunited.HarmonyPatches
+namespace PartySizeReunited.HarmonyPatches.PartySpeed
 {
     [HarmonyPatch(typeof(DefaultPartySpeedCalculatingModel), "CalculateLandBaseSpeed")]
     class Patch_PlayerPartyLandSpeed

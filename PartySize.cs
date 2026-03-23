@@ -55,7 +55,7 @@ namespace PartySizeReunited
 
             float valueToApply = newValue - result.ResultNumber;
 
-            if (party.LeaderHero != null && !IsCaravan(party))
+            if (!IsCaravan(party))
             {
                 switch (selectedScope)
                 {
@@ -63,7 +63,6 @@ namespace PartySizeReunited
                         if (ScopeExtension.IsEveryoneExceptPlayer(party))
                         {
                             result.Add(valueToApply, partySizeBonusText);
-                            SetNoMoreSupplyNeeded(party);
                         }
                         break;
 
@@ -71,7 +70,6 @@ namespace PartySizeReunited
                         if (ScopeExtension.IsOnlyPlayerClan(party))
                         {
                             result.Add(valueToApply, partySizeBonusText);
-                            SetNoMoreSupplyNeeded(party);
                         }
                         break;
 
@@ -79,7 +77,6 @@ namespace PartySizeReunited
                         if (ScopeExtension.IsOnlyPlayerKingdom(party))
                         {
                             result.Add(valueToApply, partySizeBonusText);
-                            SetNoMoreSupplyNeeded(party);
                         }
                         break;
 
@@ -87,12 +84,13 @@ namespace PartySizeReunited
                         if (ScopeExtension.IsOnlyEnnemies(party))
                         {
                             result.Add(valueToApply, partySizeBonusText);
-                            SetNoMoreSupplyNeeded(party);
                         }
                         break;
                 }
 
-                if (isPlayerImpacted && party.LeaderHero.IsHumanPlayerCharacter == true)
+                SetNoMoreSupplyNeeded(party);
+
+                if (isPlayerImpacted && party.Owner != null && party.Owner.IsHumanPlayerCharacter)
                 {
                     // Update player's party
                     result.Add(valueToApply, partySizeBonusText);
@@ -150,25 +148,15 @@ namespace PartySizeReunited
             if (noMoreSupplyNeeded)
             {
                 SetGoldBonus(party);
-                SetFoodBonus(party);
             }
         }
 
         private void SetGoldBonus(PartyBase party)
         {
-            if (party.LeaderHero.Gold < party.MobileParty.TotalWage)
+            if (party.LeaderHero != null && party.LeaderHero.Gold < party.MobileParty.TotalWage)
             {
                 int bonus = party.MobileParty.TotalWage * 2;
                 party.LeaderHero.Gold += bonus;
-            }
-        }
-
-        private void SetFoodBonus(PartyBase party)
-        {
-            if (party.RemainingFoodPercentage < 1000)
-            {
-                int bonus = party.NumberOfAllMembers > 200 ? party.NumberOfAllMembers * 2 : 200;
-                party.RemainingFoodPercentage += bonus * 10;
             }
         }
 

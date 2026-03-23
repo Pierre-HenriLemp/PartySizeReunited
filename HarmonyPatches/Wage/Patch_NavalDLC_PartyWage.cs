@@ -9,7 +9,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Localization;
 
-namespace PartySizeReunited.HarmonyPatches
+namespace PartySizeReunited.HarmonyPatches.Wage
 {
     class Patch_NavalDLC_PartyWage
     {

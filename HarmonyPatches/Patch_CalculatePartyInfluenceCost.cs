@@ -4,7 +4,7 @@ using TaleWorlds.CampaignSystem.GameComponents;
 namespace PartySizeReunited.HarmonyPatches
 {
     [HarmonyPatch(typeof(DefaultArmyManagementCalculationModel), nameof(DefaultArmyManagementCalculationModel.CalculatePartyInfluenceCost))]
-    class Patch_DefaultArmyManagementCalculationModel
+    class Patch_CalculatePartyInfluenceCost
     {
         static void Postfix(ref int __result)
         {
