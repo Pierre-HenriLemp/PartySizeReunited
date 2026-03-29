@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
+using TaleWorlds.CampaignSystem.Party;
 
 namespace PartySizeReunited.HarmonyPatches.FoodConsumption
 {
@@ -10,21 +11,19 @@ namespace PartySizeReunited.HarmonyPatches.FoodConsumption
     [HarmonyPatch(typeof(DefaultMobilePartyFoodConsumptionModel), nameof(DefaultMobilePartyFoodConsumptionModel.CalculateDailyBaseFoodConsumptionf))]
     class Patch_FoodConsumption
     {
-        static void Postfix(ref ExplainedNumber __result)
+        static void Postfix(MobileParty party, ref ExplainedNumber __result)
         {
-            if (!ShouldApplyPatch())
+            if (!ShouldApplyPatch(party))
             {
                 return;
             }
 
-            // Reduce by 90% the result.
-            __result.AddFactor(-0.9f, new("Party Size Reunited food consumption reduction"));
         }
 
-        private static bool ShouldApplyPatch()
+        private static bool ShouldApplyPatch(MobileParty party)
         {
             var options = SubModule.PartySizeReunitedOptions;
-            if (!options.IsActivate)
+            if (!options.IsActivate || party.Owner != null && party.Owner.IsHumanPlayerCharacter)
             {
                 return false;
             }

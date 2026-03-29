@@ -148,7 +148,6 @@ namespace PartySizeReunited
             if (noMoreSupplyNeeded)
             {
                 SetGoldBonus(party);
-                SetFoodBonus(party);
             }
         }
 
@@ -158,15 +157,6 @@ namespace PartySizeReunited
             {
                 int bonus = party.MobileParty.TotalWage * 2;
                 party.LeaderHero.Gold += bonus;
-            }
-        }
-
-        private void SetFoodBonus(PartyBase party)
-        {
-            if (party.RemainingFoodPercentage < 1000)
-            {
-                int bonus = party.NumberOfAllMembers > 200 ? party.NumberOfAllMembers * 2 : 200;
-                party.RemainingFoodPercentage += bonus * 10;
             }
         }
 
