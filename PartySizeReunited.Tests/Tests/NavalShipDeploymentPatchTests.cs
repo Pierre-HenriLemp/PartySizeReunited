@@ -1,4 +1,3 @@
-using PartySizeReunited;
 using PartySizeReunited.HarmonyPatches;
 using PartySizeReunited.McMMenu.Options;
 using PartySizeReunited.Tests.TestDoubles;

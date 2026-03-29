@@ -7,7 +7,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Localization;
 
-namespace PartySizeReunited.HarmonyPatches
+namespace PartySizeReunited.HarmonyPatches.PartySpeed
 {
     class Patch_NavalDLC_PlayerPartyNavalSpeed
     {

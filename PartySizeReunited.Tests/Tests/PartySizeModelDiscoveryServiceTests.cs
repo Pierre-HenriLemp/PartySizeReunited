@@ -1,4 +1,3 @@
-using System.Linq;
 using PartySizeReunited.Services;
 using TaleWorlds.CampaignSystem.GameComponents;
 using Xunit;

@@ -7,7 +7,7 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Localization;
 
-namespace PartySizeReunited.HarmonyPatches
+namespace PartySizeReunited.HarmonyPatches.Wage
 {
     [HarmonyPatch(typeof(DefaultPartyWageModel), "GetTotalWage")]
     internal class Patch_PartyWage

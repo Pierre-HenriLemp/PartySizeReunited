@@ -2,6 +2,8 @@
 using MCM.Abstractions.Base.Global;
 using MCM.Abstractions.FluentBuilder;
 using PartySizeReunited.HarmonyPatches;
+using PartySizeReunited.HarmonyPatches.PartySpeed;
+using PartySizeReunited.HarmonyPatches.Wage;
 using PartySizeReunited.McMMenu;
 using PartySizeReunited.McMMenu.Options;
 using PartySizeReunited.Services;
