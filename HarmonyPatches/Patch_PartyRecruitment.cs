@@ -10,15 +10,15 @@ namespace PartySizeReunited.HarmonyPatches
     {
         public static void Postfix(Clan clan, int clanTierToCheck, ref int __result)
         {
-            if (SubModule.partyRecruitmentOptions.IsActivate && clan == Clan.PlayerClan && clan.Leader.IsHumanPlayerCharacter)
+            if (SubModule.PartyRecruitmentOptions.IsActivate && clan == Clan.PlayerClan && clan.Leader.IsHumanPlayerCharacter)
             {
-                if (SubModule.partyRecruitmentOptions.Type.SelectedValue.SelectedValue == OptionTypeEnum.STATIC)
+                if (SubModule.PartyRecruitmentOptions.Type.SelectedValue.SelectedValue == OptionTypeEnum.STATIC)
                 {
-                    __result = SubModule.partyRecruitmentOptions.Amount;
+                    __result = SubModule.PartyRecruitmentOptions.Amount;
                 }
-                else if (SubModule.partyRecruitmentOptions.Type.SelectedValue.SelectedValue == OptionTypeEnum.PROGRESSIVE)
+                else if (SubModule.PartyRecruitmentOptions.Type.SelectedValue.SelectedValue == OptionTypeEnum.PROGRESSIVE)
                 {
-                    __result = clanTierToCheck + SubModule.partyRecruitmentOptions.Amount;
+                    __result = clanTierToCheck + SubModule.PartyRecruitmentOptions.Amount;
                 }
             }
         }

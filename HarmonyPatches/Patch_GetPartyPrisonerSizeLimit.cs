@@ -15,24 +15,23 @@ namespace PartySizeReunited.HarmonyPatches
     {
         static void Postfix(PartyBase party, ref ExplainedNumber __result)
         {
-            if (ShouldApplyPatch(party))
+            if (!ShouldApplyPatch(party)) return;
+            
+            var options = SubModule.PartySizeReunitedOptions;
+            TextObject description = new("PartySizeReunited modifier");
+            if (options.PartyGarrisonFixedBonus != 0)
             {
-                var options = SubModule.PartySizeReunitedOptions;
-                TextObject description = new("PartySizeReunited modifier");
-                if (options.PartyGarrisonFixedBonus != 0)
-                {
-                    __result.Add(
-                        options.PartyGarrisonFixedBonus,
-                        description
-                    );
-                }
-                else
-                {
-                    __result.AddFactor(
-                        options.PartyGarrisonMultiBonus,
-                        description
-                        );
-                }
+                __result.Add(
+                    options.PartyGarrisonFixedBonus,
+                    description
+                );
+            }
+            else
+            {
+                __result.AddFactor(
+                    options.PartyGarrisonMultiBonus,
+                    description
+                );
             }
         }
 
@@ -51,7 +50,7 @@ namespace PartySizeReunited.HarmonyPatches
                 IScope.Only_player_clan => ScopeExtension.IsOnlyPlayerClan(party),
                 IScope.Only_player_kingdom => ScopeExtension.IsOnlyPlayerKingdom(party),
                 IScope.Only_ennemies => ScopeExtension.IsOnlyEnnemies(party),
-                _ => false,
+                _ => false
             };
         }
     }

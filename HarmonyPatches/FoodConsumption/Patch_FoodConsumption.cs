@@ -18,6 +18,8 @@ namespace PartySizeReunited.HarmonyPatches.FoodConsumption
                 return;
             }
 
+            // Reduce by 70% the result.
+            __result.AddFactor(-0.7f, new("Party Size Reunited food consumption reduction"));
         }
 
         private static bool ShouldApplyPatch(MobileParty party)

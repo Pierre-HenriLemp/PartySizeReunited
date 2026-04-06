@@ -74,7 +74,7 @@ namespace PartySizeReunited.McMMenu
                              .SetRequireRestart(false)
                              .SetOrder(2)
                              )
-                .AddInteger("psr_fixed_bonus_amnt", "Fixed party size bonus amount", 0, 10000,
+                .AddInteger("psr_fixed_bonus_amnt", "Fixed party size bonus amount", 0, 5000,
                              new ProxyRef<int>(() => opt.FixedBonusAmnt, value => opt.FixedBonusAmnt = value),
                              propBuilder => propBuilder
                              .SetHintText(fixedBonusAmntHint)

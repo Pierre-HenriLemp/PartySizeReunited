@@ -15,20 +15,18 @@ namespace PartySizeReunited
 {
     public class SubModule : MBSubModuleBase
     {
-        public const string ModuleId = "PartySizeReunited";
+        private const string ModuleId = "PartySizeReunited";
 
-        public static WarSailsOptions WarSailsOptions = new();
-        public static PartySizeReunitedOptions PartySizeReunitedOptions = new();
-        public static CompanionsOptions CompanionsOptions = new();
-        public static PartyRecruitmentOptions partyRecruitmentOptions = new();
-        public static bool isWarSailsModulePresent = false;
+        public static readonly WarSailsOptions WarSailsOptions = new();
+        public static readonly PartySizeReunitedOptions PartySizeReunitedOptions = new();
+        public static readonly CompanionsOptions CompanionsOptions = new();
+        public static readonly PartyRecruitmentOptions PartyRecruitmentOptions = new();
 
-        private static Harmony _harmony;
-        private static FluentGlobalSettings? settings;
+        private static bool _isWarSailsModulePresent;
+        private static Harmony? _harmony;
+        private static FluentGlobalSettings? _settings;
 
-        private bool initOnce = false;
-
-
+        private bool _initOnce;
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
@@ -50,7 +48,7 @@ namespace PartySizeReunited
                 return;
 
             _harmony = new Harmony(ModuleId);
-            _harmony.PatchAll();
+            _harmony.PatchAll(typeof(SubModule).Assembly);
         }
 
         protected override void OnSubModuleUnloaded()
@@ -65,14 +63,14 @@ namespace PartySizeReunited
         {
             base.OnInitialState();
 
-            if (initOnce)
+            if (_initOnce)
             {
                 return;
             }
 
-            initOnce = true;
+            _initOnce = true;
 
-            isWarSailsModulePresent = ModuleHelper.GetActiveModules()
+            _isWarSailsModulePresent = ModuleHelper.GetActiveModules()
                 .Exists(module =>
                     module.IsOfficial &&
                     module.Category == ModuleCategory.Singleplayer &&
@@ -83,30 +81,29 @@ namespace PartySizeReunited
             McMPartySizeReunitedSettings.AddPartySizeSettings(builder, PartySizeReunitedOptions);
             AddMoreSettings(builder);
             AddPartyAndCompanionSettings(builder);
-            settings = builder.BuildAsGlobal();
-            settings?.Register();
+            _settings = builder.BuildAsGlobal();
+            _settings?.Register();
         }
 
-        private void AddMoreSettings(ISettingsBuilder builder)
+        private static void AddMoreSettings(ISettingsBuilder builder)
         {
-            if (isWarSailsModulePresent)
-            {
-                // Add WarSails mod options
-                McMWarSailsSettings.AddWarsailsSettings(builder, WarSailsOptions);
+            if (!_isWarSailsModulePresent) return;
 
-                // Patch Warsails deployment method
-                Patch_NavalDLC_ShipDeploymentModel.TryApplyPatch(_harmony);
-                Patch_NavalDLC_PartyWage.TryApplyPatch(_harmony);
-                Patch_NavalDLC_PlayerPartyNavalSpeed.TryApplyPatch(_harmony);
+            // Add WarSails mod options
+            McMWarSailsSettings.AddWarsailsSettings(builder, WarSailsOptions);
 
-                Utils.Print("PartySizeReunited configured for WarSails DLC");
-            }
+            // Patch WarSails deployment method
+            Patch_NavalDLC_ShipDeploymentModel.TryApplyPatch(_harmony);
+            Patch_NavalDLC_PartyWage.TryApplyPatch(_harmony);
+            Patch_NavalDLC_PlayerPartyNavalSpeed.TryApplyPatch(_harmony);
+
+            Utils.Print("PartySizeReunited configured for WarSails DLC");
         }
 
-        private void AddPartyAndCompanionSettings(ISettingsBuilder builder)
+        private static void AddPartyAndCompanionSettings(ISettingsBuilder builder)
         {
             McMCompanionSettings.AddCompanionsSettings(builder, CompanionsOptions);
-            McMPartyRecruitmentSettings.AddPartyRecruitmentSettings(builder, partyRecruitmentOptions);
+            McMPartyRecruitmentSettings.AddPartyRecruitmentSettings(builder, PartyRecruitmentOptions);
         }
     }
 }
